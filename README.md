@@ -7,6 +7,5 @@ The base code is reference to blog at https://www.ibm.com/blogs/bluemix/2016/05/
 ## Demonstration
 
 Facebook Messenger > IBM FinTech SG
-URL: http://me.m/IBMFinTechSG
+URL: http://m.me/IBMFinTechSG
 
- 
