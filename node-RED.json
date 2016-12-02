@@ -1,0 +1,359 @@
+[
+    {
+        "id": "e699a510.0497a8",
+        "type": "watson-conversation-v1",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "workspaceid": "e1070dfb-bb7b-4fb6-ac06-d95659cbbfa0",
+        "multiuser": true,
+        "context": true,
+        "x": 448.5,
+        "y": 33,
+        "wires": [
+            [
+                "f9767d1e.75502",
+                "68e9cc73.196c84"
+            ]
+        ]
+    },
+    {
+        "id": "30b5c264.0b5c0e",
+        "type": "http in",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "url": "/chat",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 86.5,
+        "y": 118,
+        "wires": [
+            [
+                "6718df1d.48062",
+                "11f8d1b3.dfcb7e"
+            ]
+        ]
+    },
+    {
+        "id": "6718df1d.48062",
+        "type": "function",
+        "z": "de24a7bc.36a4b8",
+        "name": "Extract Chat Text",
+        "func": "msg.user = msg.payload.sender;\nmsg.payload = msg.payload.text;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 312.5,
+        "y": 122,
+        "wires": [
+            [
+                "e699a510.0497a8"
+            ]
+        ]
+    },
+    {
+        "id": "11f8d1b3.dfcb7e",
+        "type": "debug",
+        "z": "de24a7bc.36a4b8",
+        "name": "FB Input",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 173.5,
+        "y": 295,
+        "wires": []
+    },
+    {
+        "id": "1705fae7.03a8d5",
+        "type": "http response",
+        "z": "de24a7bc.36a4b8",
+        "name": "HTTP response",
+        "x": 760.5,
+        "y": 125,
+        "wires": []
+    },
+    {
+        "id": "f9767d1e.75502",
+        "type": "debug",
+        "z": "de24a7bc.36a4b8",
+        "name": "Watson Output",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 771.5,
+        "y": 29,
+        "wires": []
+    },
+    {
+        "id": "878c943b.12fec8",
+        "type": "http request",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "https://graph.facebook.com/v2.6/{{{store.sender}}}?access_token=EAAQZCk89Hh1gBAB55Jt7V4mpcGp54fcQFAqnrxtdZB7YzpM5ODMQ4ZAbNrYE4ocoI1LWrMNz5TyiK0VD0lLYzL4vZC6PZBRGE84erM9ZAw9owvgUR05jPqu8A44NZAgvll2dwO7VZBcTqormN96uVe5yOVFZBrz5jZBP5k377It0Ox2gZDZD",
+        "tls": "",
+        "x": 425.5,
+        "y": 343,
+        "wires": [
+            [
+                "349cdc7c.8b8cd4"
+            ]
+        ]
+    },
+    {
+        "id": "22c56f65.0fd22",
+        "type": "cloudant out",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "cloudant": "",
+        "database": "msg",
+        "service": "chatsgfintech-cloudantNoSQLDB",
+        "payonly": true,
+        "operation": "insert",
+        "x": 805.5,
+        "y": 477,
+        "wires": []
+    },
+    {
+        "id": "87363ae6.0eeba8",
+        "type": "debug",
+        "z": "de24a7bc.36a4b8",
+        "name": "Construct msg.payload",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 799.5,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "fb41e02c.afe27",
+        "type": "function",
+        "z": "de24a7bc.36a4b8",
+        "name": "Reside msg.payload",
+        "func": "msg.store = msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 311.5,
+        "y": 238,
+        "wires": [
+            [
+                "878c943b.12fec8"
+            ]
+        ]
+    },
+    {
+        "id": "349cdc7c.8b8cd4",
+        "type": "function",
+        "z": "de24a7bc.36a4b8",
+        "name": "Constructure msg.payload",
+        "func": "msg.store.timestamp = new Date();\nmsg.store.sender_detail = JSON.parse(msg.payload);\nmsg.payload = msg.store;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 488.5,
+        "y": 453,
+        "wires": [
+            [
+                "87363ae6.0eeba8",
+                "22c56f65.0fd22"
+            ]
+        ]
+    },
+    {
+        "id": "68e9cc73.196c84",
+        "type": "json",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "x": 566.5,
+        "y": 180,
+        "wires": [
+            [
+                "1705fae7.03a8d5",
+                "8d3879cf.160278"
+            ]
+        ]
+    },
+    {
+        "id": "da515603.46f598",
+        "type": "watson-conversation-v1",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "workspaceid": "a493e2fd-224e-4738-a657-37b13a159094",
+        "multiuser": true,
+        "context": true,
+        "x": 427,
+        "y": 571,
+        "wires": [
+            [
+                "cc84edd8.d7f38",
+                "fae4c410.fedf38"
+            ]
+        ]
+    },
+    {
+        "id": "550d355f.c91c4c",
+        "type": "http in",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "url": "/trivia",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 65,
+        "y": 656,
+        "wires": [
+            [
+                "9cef485b.e86e08",
+                "431a1c03.7d70f4"
+            ]
+        ]
+    },
+    {
+        "id": "9cef485b.e86e08",
+        "type": "function",
+        "z": "de24a7bc.36a4b8",
+        "name": "Extract Chat Text",
+        "func": "msg.user = msg.payload.sender;\nmsg.payload = msg.payload.text;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 291,
+        "y": 660,
+        "wires": [
+            [
+                "da515603.46f598"
+            ]
+        ]
+    },
+    {
+        "id": "431a1c03.7d70f4",
+        "type": "debug",
+        "z": "de24a7bc.36a4b8",
+        "name": "FB Input",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 152,
+        "y": 833,
+        "wires": []
+    },
+    {
+        "id": "29048502.39e5fa",
+        "type": "http response",
+        "z": "de24a7bc.36a4b8",
+        "name": "HTTP response",
+        "x": 739,
+        "y": 663,
+        "wires": []
+    },
+    {
+        "id": "cc84edd8.d7f38",
+        "type": "debug",
+        "z": "de24a7bc.36a4b8",
+        "name": "Watson Output",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 750,
+        "y": 567,
+        "wires": []
+    },
+    {
+        "id": "780bd6af.279e68",
+        "type": "http request",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "https://graph.facebook.com/v2.6/{{{store.sender}}}?access_token=EAAQZCk89Hh1gBAB55Jt7V4mpcGp54fcQFAqnrxtdZB7YzpM5ODMQ4ZAbNrYE4ocoI1LWrMNz5TyiK0VD0lLYzL4vZC6PZBRGE84erM9ZAw9owvgUR05jPqu8A44NZAgvll2dwO7VZBcTqormN96uVe5yOVFZBrz5jZBP5k377It0Ox2gZDZD",
+        "tls": "",
+        "x": 404,
+        "y": 881,
+        "wires": [
+            [
+                "e6394669.afca78"
+            ]
+        ]
+    },
+    {
+        "id": "1ed9d512.c4e1fb",
+        "type": "cloudant out",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "cloudant": "",
+        "database": "msg",
+        "service": "chatsgfintech-cloudantNoSQLDB",
+        "payonly": true,
+        "operation": "insert",
+        "x": 784,
+        "y": 1015,
+        "wires": []
+    },
+    {
+        "id": "bb0aad60.487b",
+        "type": "debug",
+        "z": "de24a7bc.36a4b8",
+        "name": "Construct msg.payload",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 778,
+        "y": 958,
+        "wires": []
+    },
+    {
+        "id": "f507ee3a.44831",
+        "type": "function",
+        "z": "de24a7bc.36a4b8",
+        "name": "Reside msg.payload",
+        "func": "msg.store = msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 290,
+        "y": 776,
+        "wires": [
+            [
+                "780bd6af.279e68"
+            ]
+        ]
+    },
+    {
+        "id": "e6394669.afca78",
+        "type": "function",
+        "z": "de24a7bc.36a4b8",
+        "name": "Constructure msg.payload",
+        "func": "msg.store.timestamp = new Date();\nmsg.store.sender_detail = JSON.parse(msg.payload);\nmsg.payload = msg.store;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 467,
+        "y": 991,
+        "wires": [
+            [
+                "bb0aad60.487b",
+                "1ed9d512.c4e1fb"
+            ]
+        ]
+    },
+    {
+        "id": "fae4c410.fedf38",
+        "type": "json",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "x": 545,
+        "y": 718,
+        "wires": [
+            [
+                "29048502.39e5fa"
+            ]
+        ]
+    },
+    {
+        "id": "8d3879cf.160278",
+        "type": "debug",
+        "z": "de24a7bc.36a4b8",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 835.5,
+        "y": 194,
+        "wires": []
+    }
+]
